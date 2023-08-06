@@ -25,27 +25,29 @@ def check_field(field):
 
 def loop(field):
 	if not check_field(field):
-        return None
+        	return None
 
 	e = get_empty(field)
 	if e is None:
 		return field
-    for i in range(1, 10):
-        nfield = [[k for k in j] for j in field]
-        nfield[e[1]][e[0]] = str(i)
-        z = loop(nfield)
-        if z is not None:
-            return z
+	
+	for i in range(1, 10):
+		nfield = [[k for k in j] for j in field]
+		nfield[e[1]][e[0]] = str(i)
+		z = loop(nfield)
+		if z is not None:
+			return z
 
-    return None
+	return None
 
 def fprint(field):
-    for yn, y in enumerate(field):
-        if yn % 3 == 0 and yn != 0:
-            print("------+-------+------")
-        for xn, x in enumerate(y):
-            if xn % 3 == 0 and xn != 0:
-                print("|", end=" ")
-            print(x, end=" ")
-        print()
+	for yn, y in enumerate(field):
+		if yn % 3 == 0 and yn != 0:
+		    print("------+-------+------")
+			
+		for xn, x in enumerate(y):
+			if xn % 3 == 0 and xn != 0:
+				print("|", end=" ")
+			print(x, end=" ")
+		print()
 
