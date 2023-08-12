@@ -1,8 +1,8 @@
 # sudoku-solver
-A sudoku solver with minimal code
+Solves any sudoku automatically, but hasn't any implemented error handling.
 
 # Use
-Just import the solve function and input the field as a list with nine lists containing nine strings containing either numbers or spaces. To print out a field you can use the `fprint` function
+Import the solve function and input the field formatted as shown in the following example. To print out a field you can use the `fprint` function.
 
 ```
 from sudoku_solver import solve, fprint
