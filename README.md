@@ -1,8 +1,8 @@
 # sudoku-solver
-Solves any sudoku automatically, but hasn't any implemented error handling.
+Just a little side-project to automatically solve a sudoku. Can be used for fun or whatever ... it is not designed to be fast, just plainly written.
 
 # Use
-Import the solve function and input the field formatted as shown in the following example. To print out a field you can use the `fprint` function.
+Import the `solve` function and input the field formatted as shown in the following example. To print out a field you can use the `fprint` function.
 
 ```
 from sudoku_solver import solve, fprint
