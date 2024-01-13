@@ -1,5 +1,5 @@
 # sudoku-solver
-Just a little side-project to automatically solve a sudoku. Can be used for fun or whatever ... it is not designed to be fast, just plainly written.
+Just a little side-project to automatically solve a sudoku. Can be used for fun or whatever ... it is not designed to be fast, just plainly written. It lacks documentation - clearly - and will simply continue doing so.
 
 # Use
 Import the `solve` function and input the field formatted as shown in the following example. To print out a field you can use the `fprint` function.
