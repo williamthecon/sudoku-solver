@@ -256,16 +256,19 @@ class Field:
         for row in self.rows:
             for value in set(row):
                 if value != 0 and row.count(value) > 1:
+                    print("row", row, value)
                     return False
 
         for column in self.columns:
             for value in set(column):
                 if value != 0 and column.count(value) > 1:
+                    print("column", column, value)
                     return False
 
         for block in self.blocks:
             for value in set(block):
                 if value != 0 and block.count(value) > 1:
+                    print("block", block, value)
                     return False
 
         return True
@@ -423,6 +426,17 @@ class Coord:
             return self.x == oc.x and self.y == oc.y
 
         raise TypeError("Invalid comparison. Only Coords and BlockCoords are allowed.")
+
+    def __ne__(self, other) -> bool:
+        """Checks if the coordinates are not equal.
+
+        Args:
+            other (Coord | BlockCoord): The other coordinate.
+
+        Returns:
+            bool: True if the coordinates are not equal, False otherwise.
+        """
+        return not self == other
 
     def __getitem__(self, key) -> int:
         """Returns the value at the given index.
