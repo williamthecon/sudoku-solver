@@ -22,6 +22,8 @@ def _loop(field: Field) -> Field | None:
         if result is not None:
             return result
 
+        field.set(empty, 0)
+
     return None
 
 def solve(field: Field) -> Field:
@@ -34,16 +36,18 @@ def solve(field: Field) -> Field:
         Field: The solved field.
 
     Raises:
-        ValueError: If the field is not valid or not solvable.
+        ValueError: If the field is not valid.
     """
-
     if not field.is_valid():
         raise ValueError("Field is not valid")
 
-    if field.is_solved():
-        return field
+    nfield = field.copy()
 
-    result = _loop(field)
+    if nfield.is_solved():
+        return nfield
+
+    result = _loop(nfield)
     if result is None:
-        raise ValueError("Field is not solvable")
+        return nfield
+
     return result

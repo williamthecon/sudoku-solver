@@ -2,11 +2,10 @@
 This project _will_ provide some different ways to solve a sudoku. Nothing is designed to be fast or efficient. The goal is just to make it work.
 
 # Use
-Import the `Field` class from `base`, the `solve` function from any other file and input the field formatted as shown in the following example.
+Import the `Field` class and the `solve` function from any file other than `base.py` and input the field formatted as shown in the following example. The method will return a copy of the input field with the solved values.
 
 ```
-from base import Field
-from sudoku_solver import solve
+from sudoku_solver import Field, solve
 
 field = Field([
     [0, 9, 7, 2, 0, 6, 0, 3, 1],
@@ -23,3 +22,5 @@ print(field)
 solution = solve(field)
 print(solution)
 ```
+
+ Note that, in case the algorithm isn't able to completely or even partially solve the sudoku, it will still return the field, but only with the partial solution. You can use `field.is_solved()` to check if the solution is complete.
