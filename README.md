@@ -1,24 +1,25 @@
 # sudoku-solver
-Just a little side-project to automatically solve a sudoku. Can be used for fun or whatever ... it is not designed to be fast, just plainly written. It lacks documentation - clearly - and will simply continue doing so.
+This project _will_ provide some different ways to solve a sudoku. Nothing is designed to be fast or efficient. The goal is just to make it work.
 
 # Use
-Import the `solve` function and input the field formatted as shown in the following example. To print out a field you can use the `fprint` function.
+Import the `Field` class from `base`, the `solve` function from any other file and input the field formatted as shown in the following example.
 
 ```
-from sudoku_solver import solve, fprint
+from base import Field
+from sudoku_solver import solve
 
-field = [
-    [' ', '9', '7', '2', ' ', '6', ' ', '3', '1'],
-    [' ', ' ', ' ', '1', ' ', '5', '4', ' ', '6'],
-    [' ', ' ', ' ', ' ', '9', ' ', ' ', '5', ' '],
-    ['7', ' ', ' ', ' ', ' ', ' ', '9', ' ', '3'],
-    ['9', ' ', '3', ' ', '8', ' ', ' ', '6', ' '],
-    [' ', '5', '2', ' ', '6', '3', ' ', '7', ' '],
-    [' ', '6', '9', ' ', ' ', '1', '5', '2', ' '],
-    ['1', ' ', '5', '6', ' ', ' ', '3', ' ', ' '],
-    ['3', ' ', '4', '8', ' ', ' ', '6', '1', '7']
-]
-fprint(field)
+field = Field([
+    [0, 9, 7, 2, 0, 6, 0, 3, 1],
+    [0, 0, 0, 1, 0, 5, 4, 0, 6],
+    [0, 0, 0, 0, 9, 0, 0, 5, 0],
+    [7, 0, 0, 0, 0, 0, 9, 0, 3],
+    [9, 0, 3, 0, 8, 0, 0, 6, 0],
+    [0, 5, 2, 0, 6, 3, 0, 7, 0],
+    [0, 6, 9, 0, 0, 1, 5, 2, 0],
+    [1, 0, 5, 6, 0, 0, 3, 0, 0],
+    [3, 0, 4, 8, 0, 0, 6, 1, 7]
+])
+print(field)
 solution = solve(field)
-fprint(solution)
+print(solution)
 ```
