@@ -5,7 +5,7 @@ This project _will_ provide some different ways to solve a sudoku. Nothing is de
 Import the `Field` class and the `solve` function from any file other than `base.py` and input the field formatted as shown in the following example. The method will return a copy of the input field with the solved values.
 
 ```
-from sudoku_solver import Field, solve
+from bruteforce import Field, solve
 
 field = Field([
     [0, 9, 7, 2, 0, 6, 0, 3, 1],
