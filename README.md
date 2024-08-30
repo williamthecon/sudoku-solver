@@ -2,9 +2,9 @@
 This project _will_ provide some different ways to solve a sudoku. Nothing is designed to be fast or efficient. The goal is just to make it work.
 
 # Use
-Import the `Field` class and the `solve` function from any file other than `base.py` and input the field formatted as shown in the following example. The method will return a copy of the input field with the solved values.
+Import the `Field` class and the `solve` function from any file other than `base.py` or `main.py` and input the field formatted as shown in the following example. The method will return a copy of the input field with the solved values.
 
-```
+```python
 from bruteforce import Field, solve
 
 field = Field([
@@ -20,6 +20,8 @@ field = Field([
 ])
 print(field)
 solution = solve(field)
+print()
+print(field.is_solved())
 print(solution)
 ```
 
