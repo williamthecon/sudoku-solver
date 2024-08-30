@@ -256,19 +256,16 @@ class Field:
         for row in self.rows:
             for value in set(row):
                 if value != 0 and row.count(value) > 1:
-                    print("row", row, value)
                     return False
 
         for column in self.columns:
             for value in set(column):
                 if value != 0 and column.count(value) > 1:
-                    print("column", column, value)
                     return False
 
         for block in self.blocks:
             for value in set(block):
                 if value != 0 and block.count(value) > 1:
-                    print("block", block, value)
                     return False
 
         return True

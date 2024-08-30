@@ -25,10 +25,10 @@ class Collection:
         self.items = items
 
     def __str__(self):
-        return str(self.items)
+        return str(list(self))
 
     def __repr__(self):
-        return repr(self.items)
+        return repr(list(self))
 
     def __iter__(self):
         for item in self.items:
@@ -36,10 +36,14 @@ class Collection:
                 yield item
 
     def __len__(self):
-        return len(self.items)
+        c = 0
+        for item in self.items:
+            if item.exists:
+                c += 1
+        return c
 
     def __getitem__(self, index):
-        return self.items[index]
+        return list(self)[index]
 
     def add(self, item):
         self.items.append(item)
@@ -74,29 +78,23 @@ def solve(field: Field) -> Field:
         block = coord.to_block_coord()
         value = nfield.get(coord)
 
-        print()
-        print(f"{coord}: {value}")
-        print(nfield)
-
-        possibles.remove(item)
-        possibles_rows[coord.y].remove(item)
-        possibles_columns[coord.x].remove(item)
-        possibles_blocks[block.n].remove(item)
-
         for item2 in possibles_rows[coord.y]:
             if value in item2.value[1]:
-                # print(f"Removing {value} from row {item2}")
                 item2.value[1].remove(value)
+                if not item2.value[1]:
+                    item2.exists = False
 
         for item2 in possibles_columns[coord.x]:
             if value in item2.value[1]:
-                # print(f"Removing {value} from column {item2}")
                 item2.value[1].remove(value)
+                if not item2.value[1]:
+                    item2.exists = False
 
         for item2 in possibles_blocks[block.n]:
             if value in item2.value[1]:
-                # print(f"Removing {value} from block {item2}")
                 item2.value[1].remove(value)
+                if not item2.value[1]:
+                    item2.exists = False
 
     possibles = Collection([])
     possibles_rows = [Collection([]) for _ in range(9)]
@@ -111,7 +109,6 @@ def solve(field: Field) -> Field:
         possibles_blocks[coord.to_block_coord().n].add(item)
 
     while not nfield.is_solved():
-        print(nfield.is_valid())
         success = False
 
         if len(possibles) == 1:
@@ -131,27 +128,103 @@ def solve(field: Field) -> Field:
         if success:
             continue
 
-        # This value only possible here
-        for n, item in enumerate(possibles):
+        # This value only possible here (row/column/block) -> correct candidates
+        for item in possibles:
             coord, values = item.value
             coord_block = coord.to_block_coord()
-            for value in values:
+
+            for value in set(values):
                 double = False
-                for item2 in possibles[n + 1:]:
-                    coord2, values2 = item2.value
+
+                # We look if in either row/column/block the value only appears once
+                for item2 in possibles_rows[coord.y]:
+                    if item == item2:
+                        continue
+
+                    _, values2 = item2.value
+
                     if value in values2:
-                        if coord.x == coord2.x or coord.y == coord2.y or coord_block.n == coord2.to_block_coord().n:
+                        double = True
+                        break
+
+                if double:
+                    for item2 in possibles_columns[coord.x]:
+                        if item == item2:
+                            continue
+
+                        _, values2 = item2.value
+
+                        if value in values2:
                             double = True
                             break
 
-                if not double:
-                    nfield.set(coord, value) # type: ignore [int != FieldValue]
-                    remove_possibility(item)
-                    success = True
-                    break
+                    if double:
+                        for item2 in possibles_blocks[coord_block.n]:
+                            if item == item2:
+                                continue
+
+                            _, values2 = item2.value
+
+                            if value in values2:
+                                double = True
+                                break
+
+                        if double:
+                            continue
+
+                nfield.set(coord, value) # type: ignore [int != FieldValue]
+                remove_possibility(item)
+                success = True
+                break
 
             if success:
                 break
+
+        if success:
+            continue
+
+        # Two aligned cells with only two possible values
+        for item in possibles:
+            coord, values = item.value
+            coord_block = coord.to_block_coord()
+
+            if len(values) != 2:
+                continue
+
+            for item2 in possibles_rows[coord.y]:
+                if item == item2:
+                    continue
+
+                coord2, values2 = item2.value
+                coord_block2 = coord2.to_block_coord()
+
+                if len(values2) != 2:
+                    continue
+
+                if all(v in values for v in values2):
+                    if coord_block.n == coord_block2.n: # same block
+                        for item3 in possibles_blocks[coord_block.n]:
+                            if item3 == item or item3 == item2:
+                                continue
+
+                            for value in values:
+                                if value in item3.value[1]:
+                                    success = True
+                                    item3.value[1].remove(value)
+                                    if not item3.value[1]:
+                                        item3.exists = False
+
+                    for item3 in possibles_rows[coord.y]:
+                        if item3 == item or item3 == item2:
+                            continue
+
+                        for value in values:
+                            if value in item3.value[1]:
+                                success = True
+                                item3.value[1].remove(value)
+                                if not item3.value[1]:
+                                    item3.exists = False
+
 
         if success:
             continue
