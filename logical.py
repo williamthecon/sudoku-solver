@@ -315,6 +315,41 @@ def solve(field: Field) -> Field:
 
         if success: continue
 
+        # [Claiming Pair/Triple] One value only possible in two/three aligned cells in the same row/column -> correct candidates
+        for row in possibles_rows:
+            aligning = {i: [] for i in range(1, 10)}
+
+            for item in row:
+                coord, values = item.value
+                block_coord = coord.to_block_coord()
+                for value in values:
+                    aligning[value].append(block_coord)
+
+            for value, block_coords in aligning.items():
+                if len(block_coords) < 2:
+                    continue
+
+                block_coord_0 = block_coords[0]
+                same_n = True
+                for block_coord_1 in block_coords[1:]:
+                    if block_coord_0.n != block_coord_1.n:
+                        same_n = False
+                        break
+
+                if same_n: # claiming pair or triple
+                    for item2 in possibles_blocks[block_coord_0.n]:
+                        if item2 in row:
+                            continue
+
+                        coord2, values2 = item2.value
+                        if value in values2:
+                            success = True
+                            item2.value[1].remove(value)
+                            if not item2.value[1]:
+                                item2.exists = False
+
+        if success: continue
+
         break
 
     # for _ in range(len(emptys)):

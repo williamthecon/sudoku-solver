@@ -352,6 +352,31 @@ class Field:
         field.set(coord, value)
         return field
 
+    def format(self, marked: list["Coord"] = []) -> str:
+        """Returns a string representation of the field. The given coordinates are marked with two asterisks.
+
+        Args:
+            marked (list[Coord], optional): The coordinates to mark. Defaults to [].
+
+        Returns:
+            str: A string representation of the field.
+        """
+        rows = []
+        for y, row in enumerate(self.rows):
+            if y % 3 == 0 and y != 0:
+                rows.append("------+-------+------")
+
+            rs = ""
+            for x, value in enumerate(row):
+                if x % 3 == 0 and x != 0:
+                    rs += "| "
+                if Coord(x, y) in marked:
+                    rs = rs[:-1] + "*" + str(value) + "*"
+                else:
+                    rs += str(value) + " "
+            rows.append(rs)
+        return "\n".join(rows)
+
 class Coord:
     """
     Represents a coordinate in the field.
