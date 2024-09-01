@@ -1,10 +1,11 @@
 from base import Field
 
-def _loop(field: Field) -> Field | None:
+def _loop(field: Field, possibles: dict[tuple[int, int], list[int]]) -> Field | None:
     """Recursively solves the given field using the bruteforce method.
 
     Args:
         field (Field): The field to solve.
+        possibles (dict[tuple[int, int], list[int]]): The possible values for all empty cells.
 
     Returns:
         Field | None: The solved field or None if the field is not solvable.
@@ -16,9 +17,9 @@ def _loop(field: Field) -> Field | None:
     if empty is None:
         return field
 
-    for number in field.get_possible_values(empty):
+    for number in possibles[empty.tuple()]:
         field.set(empty, number) # type: ignore [int != FieldValue]
-        result = _loop(field)
+        result = _loop(field, possibles)
         if result is not None:
             return result
 
@@ -46,7 +47,9 @@ def solve(field: Field) -> Field:
     if nfield.is_solved():
         return nfield
 
-    result = _loop(nfield)
+    possibles = {coord.tuple(): field.get_possible_values(coord) for coord, value in nfield.enumerate() if value == 0}
+
+    result = _loop(nfield, possibles)
     if result is None:
         return nfield
 

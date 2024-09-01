@@ -1,6 +1,9 @@
-from logical import Field, solve
+import time
+from typing import Callable
+from logical import Field, solve as solve_logical
+from bruteforce import solve as solve_bruteforce
 
-if __name__ == "__main__":
+def test_difficulty_levels(solve: Callable[[Field], Field]):
     fields = [
         Field([ # easy
             [0, 5, 4, 0, 7, 0, 0, 2, 6],
@@ -87,3 +90,27 @@ if __name__ == "__main__":
         print()
         print(solution.is_solved())
         print(solution)
+
+def test_time(solve: Callable[[Field], Field]):
+    field = Field([ # extreme
+        [0, 0, 0, 0, 2, 7, 0, 0, 0],
+        [0, 0, 0, 5, 9, 4, 0, 2, 7],
+        [0, 0, 0, 0, 0, 0, 6, 0, 0],
+        [8, 0, 0, 1, 0, 5, 4, 0, 0],
+        [0, 0, 0, 0, 0, 8, 0, 5, 3],
+        [0, 0, 4, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 6, 0],
+        [0, 9, 0, 0, 3, 0, 1, 0, 0],
+        [5, 1, 0, 0, 0, 2, 0, 0, 0]
+    ])
+    times = []
+    for _ in range(100):
+        start = time.time()
+        solution = solve(field)
+        end = time.time()
+        times.append(end - start)
+    print(f"Average time: {sum(times) / len(times)}")
+
+if __name__ == "__main__":
+    test_time(solve_logical)
+    test_time(solve_bruteforce)

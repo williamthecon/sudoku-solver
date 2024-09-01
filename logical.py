@@ -123,7 +123,6 @@ def solve(field: Field) -> Field:
                 nfield.set(coord, values[0]) # type: ignore [int != FieldValue]
                 remove_possibility(item)
                 success = True
-                break
 
         if success: continue
 
@@ -174,9 +173,6 @@ def solve(field: Field) -> Field:
                 nfield.set(coord, value) # type: ignore [int != FieldValue]
                 remove_possibility(item)
                 success = True
-                break
-
-            if success:
                 break
 
         if success: continue
