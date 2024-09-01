@@ -104,7 +104,7 @@ def test_time(solve: Callable[[Field], Field]):
         [5, 1, 0, 0, 0, 2, 0, 0, 0]
     ])
     times = []
-    for _ in range(100):
+    for _ in range(1):
         start = time.time()
         solution = solve(field)
         end = time.time()

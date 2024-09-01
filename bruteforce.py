@@ -47,9 +47,9 @@ def solve(field: Field) -> Field:
     if nfield.is_solved():
         return nfield
 
-    possibles = {coord.tuple(): field.get_possible_values(coord) for coord, value in nfield.enumerate() if value == 0}
+    possibles = {coord.tuple(): list(field.get_possible_values(coord)) for coord, value in nfield.enumerate() if value == 0}
 
-    result = _loop(nfield, possibles)
+    result = _loop(nfield, possibles) # type: ignore
     if result is None:
         return nfield
 

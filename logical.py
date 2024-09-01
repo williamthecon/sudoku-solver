@@ -1,11 +1,8 @@
 from base import Field, Coord, FieldValue
 
 # Strategies:
-# 1. Only one possible value here
-# 2. This value only possible here (row/column/block)
-# (3. Two cells (in a row/column/block) with only two possible values)
-# Two cells align with at least one possible value other appearances in block can be eliminated
-# " and they are in the same block, other appearances in block can be eliminated
+# [Naked Single] Only one possible value here
+# [Hidden Single] This value only possible here (row/column/block)
 
 class Item:
     exists: bool
@@ -116,28 +113,25 @@ def solve(field: Field) -> Field:
             nfield.set(coord, values[0]) # type: ignore [int != FieldValue]
             break
 
-        # [Naked Single] Only one possible value here
         for item in possibles:
             coord, values = item.value
+            coord_block = coord.to_block_coord()
+
+            # [Naked Single] Only one possible value here
             if len(values) == 1:
                 nfield.set(coord, values[0]) # type: ignore [int != FieldValue]
                 remove_possibility(item)
                 success = True
 
-        if success: continue
+            if success: continue
 
-        # [Hidden Single] This value only possible here (row/column/block)
-        for item in possibles:
-            coord, values = item.value
-            coord_block = coord.to_block_coord()
-
+            # [Hidden Single] This value only possible here (row/column/block)
             for value in set(values):
                 double = False
 
                 # We look if in either row/column/block the value only appears once
                 for item2 in possibles_rows[coord.y]:
-                    if item == item2:
-                        continue
+                    if item == item2: continue
 
                     _, values2 = item2.value
 
@@ -147,8 +141,7 @@ def solve(field: Field) -> Field:
 
                 if double:
                     for item2 in possibles_columns[coord.x]:
-                        if item == item2:
-                            continue
+                        if item == item2: continue
 
                         _, values2 = item2.value
 
@@ -158,8 +151,7 @@ def solve(field: Field) -> Field:
 
                     if double:
                         for item2 in possibles_blocks[coord_block.n]:
-                            if item == item2:
-                                continue
+                            if item == item2: continue
 
                             _, values2 = item2.value
 
@@ -167,39 +159,30 @@ def solve(field: Field) -> Field:
                                 double = True
                                 break
 
-                        if double:
-                            continue
+                        if double: continue
 
                 nfield.set(coord, value) # type: ignore [int != FieldValue]
                 remove_possibility(item)
                 success = True
                 break
 
-        if success: continue
+            if success: continue
 
-        # [Naked Pair] Two cells in the same row/column/block with only two possible values -> correct candidates
-        for item in possibles:
-            coord, values = item.value
-            coord_block = coord.to_block_coord()
-
-            if len(values) != 2:
-                continue
+            # [Naked Pair] Two cells in the same row/column/block with only two possible values -> correct candidates
+            if len(values) != 2: continue
 
             for item2 in possibles_rows[coord.y]:
-                if item == item2:
-                    continue
+                if item == item2: continue
 
                 coord2, values2 = item2.value
                 coord_block2 = coord2.to_block_coord()
 
-                if len(values2) != 2:
-                    continue
+                if len(values2) != 2: continue
 
                 if all(v in values for v in values2):
                     if coord_block.n == coord_block2.n: # same block
                         for item3 in possibles_blocks[coord_block.n]:
-                            if item3 == item or item3 == item2:
-                                continue
+                            if item3 == item or item3 == item2: continue
 
                             for value in values:
                                 if value in item3.value[1]:
@@ -209,8 +192,7 @@ def solve(field: Field) -> Field:
                                         item3.exists = False
 
                     for item3 in possibles_rows[coord.y]:
-                        if item3 == item or item3 == item2:
-                            continue
+                        if item3 == item or item3 == item2: continue
 
                         for value in values:
                             if value in item3.value[1]:
@@ -220,20 +202,17 @@ def solve(field: Field) -> Field:
                                     item3.exists = False
 
             for item2 in possibles_columns[coord.x]:
-                if item == item2:
-                    continue
+                if item == item2: continue
 
                 coord2, values2 = item2.value
                 coord_block2 = coord2.to_block_coord()
 
-                if len(values2) != 2:
-                    continue
+                if len(values2) != 2: continue
 
                 if all(v in values for v in values2):
                     if coord_block.n == coord_block2.n: # same block
                         for item3 in possibles_blocks[coord_block.n]:
-                            if item3 == item or item3 == item2:
-                                continue
+                            if item3 == item or item3 == item2: continue
 
                             for value in values:
                                 if value in item3.value[1]:
@@ -243,8 +222,7 @@ def solve(field: Field) -> Field:
                                         item3.exists = False
 
                     for item3 in possibles_columns[coord.x]:
-                        if item3 == item or item3 == item2:
-                            continue
+                        if item3 == item or item3 == item2: continue
 
                         for value in values:
                             if value in item3.value[1]:
@@ -254,18 +232,15 @@ def solve(field: Field) -> Field:
                                     item3.exists = False
 
             for item2 in possibles_blocks[coord_block.n]:
-                if item == item2:
-                    continue
+                if item == item2: continue
 
                 coord2, values2 = item2.value
 
-                if len(values2) != 2:
-                    continue
+                if len(values2) != 2: continue
 
                 if all(v in values for v in values2):
                     for item3 in possibles_blocks[coord_block.n]:
-                        if item3 == item or item3 == item2:
-                            continue
+                        if item3 == item or item3 == item2: continue
 
                         for value in values:
                             if value in item3.value[1]:
@@ -274,7 +249,7 @@ def solve(field: Field) -> Field:
                                 if not item3.value[1]:
                                     item3.exists = False
 
-        if success: continue
+        # if success: continue
 
         # [Pointing Pair/Triple] One value only possible in two/three aligned cells in the same block -> correct candidates
         for block in possibles_blocks:
